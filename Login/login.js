@@ -11,13 +11,13 @@ async function login(e) {
     // localStorage.setItem(obj.sell,JSON.stringify(obj));
     try {
         let response = await axios.post('http://localhost:3000/user/login', loginDetails)
-        if (response.status === 201) {
+        if ( response.status === 201) {
             alert(response.data.message);
         }
         else if (response.status === 400) {
             alert(response.data.message);
         }
-        else if (response.status === 404) {
+        else if (response.status === 401) {
             alert(response.data.message);
         }
         else {

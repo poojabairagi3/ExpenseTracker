@@ -6,7 +6,7 @@ async function SaveToCrudCrud(event){
     const obj={
         name:name,
         email:email,
-        password:password
+        password: password
     }
     console.log(obj);
     // localStorage.setItem(obj.sell,JSON.stringify(obj));

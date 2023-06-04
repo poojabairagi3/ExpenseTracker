@@ -1,22 +1,23 @@
 const User = require('../models/user');
+const bcrypt=require('bcrypt');
 
 exports.postUser = async (req, res, next) => {
   try {
 
     const { name, email, password } = req.body;
     console.log(name, email, password);
-    const emailExist = await User.findOne({ where: { email: email } });
-    console.log(name, email, password)
-    if (name == null || name == undefined || email == null || email == undefined || password == null || password == undefined) {
-      return res.status(400).json({ error: "Bad Parameters - Something is Missing" });
-    }
-    else if (emailExist) {
-      res.status(401).json({ message: "email already exist" });
-    }
-    else {
-      await User.create({ name, email, password });
-
-      res.status(201).json({ message: "successfully create user" })
+    const user = await User.findOne({ where: { email: email } });
+    if (user) {
+      return res.status(201).json({ err: "email already exits" });
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password, salt);
+      console.log(hashPassword);
+      User.create({
+        name: name,
+        email: email,
+        password: hashPassword,
+      });
     }
   }
   catch (err) {
@@ -27,20 +28,26 @@ exports.postUser = async (req, res, next) => {
 
 exports.postLogin = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    // const email=req.body.email;
-    // const password=req.body.password;
-    const result = await User.findOne({ where: { email: email } })
-    if (result) {
-      if (result.password === password) {
-        res.status(201).json({ message: 'Successfully login' });
-      }
-      else {
-        res.status(400).json({ message: 'Password Wrong' })
-      }
-    }
-    else {
-      res.status(404).json({ message: 'Email doesn"t exist' });
+    const email = req.body.email;
+    const password = req.body.password;
+    const user = await User.findOne({
+      where: { email: email }
+    });
+    if (user) {
+      bcrypt.compare(password, user.password,(err,result)=>{
+        if(err){
+          return res.status(500).json({ message: "something went wrong" });
+        }
+        if(result===true){
+          return res.status(201).json({ msg: "login successfully" });
+        }
+        else {
+          return res.status(400).json({ msg: "Password incorrect" });
+        }
+      });
+        
+    } else{
+      return res.status(404).json({ msg: "user not exist" });
     }
   }
   catch (err) {
