@@ -40,7 +40,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
 const sequelize = require("./util/database");
-var cors = require("cors");
+const cors = require("cors");
 
 const app = express();
 
@@ -50,28 +50,31 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 const productRoutes = require("./routes/product");
-const todosRoutes=require("./routes/todos");
-const userRoutes=require("./routes/user");
+const todosRoutes = require("./routes/todos");
+const userRoutes = require("./routes/user");
 
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/product", productRoutes);
-app.use("/todos",todosRoutes);
+app.use("/todos", todosRoutes);
 
-app.use("/user",userRoutes);
+app.use("/user", userRoutes);
 app.use(errorController.get404);
 
-app.use(cors({
-  origin:'*',
-  methods:['GET','POST']
-}))
+app.get('/products/:id', function (req, res, next) {
+  res.json({ msg: 'This is CORS-enabled for all origins!' });
+});
+
+const PORT = 3000;
 
 sequelize
   .sync()
   .then((result) => {
     // console.log(result);
-    app.listen(3000);
+    app.listen(PORT, function () {
+      console.log(`CORS-enabled web server listening on port ${PORT}`)
+    });
   })
   .catch((err) => console.log(err));
 

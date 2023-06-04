@@ -1,34 +1,49 @@
-const User=require('../models/user');
+const User = require('../models/user');
 
-exports.postUser=async(req,res,next)=>{
-    try{
-        if(!req.body.name || !req.body.email || !req.body.password  
-          ){
-            
-          return res.status(400).json({err:"Bad parameters - Something is missing"})
-        }
-        
+exports.postUser = async (req, res, next) => {
+  try {
 
-    const name=req.body.name;
-    const email =req.body.email;
-    // const  emailExist= req.params.email;
-    const emailExist =await User.findOne({where:{email:email}});
-    if(emailExist){
-      return res.status(401).json({err:"Email Already Exist "});      
+    const { name, email, password } = req.body;
+    console.log(name, email, password);
+    const emailExist = await User.findOne({ where: { email: email } });
+    console.log(name, email, password)
+    if (name == null || name == undefined || email == null || email == undefined || password == null || password == undefined) {
+      return res.status(400).json({ error: "Bad Parameters - Something is Missing" });
     }
-    else{
-      const password=req.body.password;
-      const data=await User.create({
-        name:name,
-        email:email,
-        password:password
-      });
-      console.log(data);
-       res.status(201).json({message:'Successfully create new user'});  
-}   
+    else if (emailExist) {
+      res.status(401).json({ message: "email already exist" });
     }
-    catch(err){
-        res.status(500).json(err);
-    };
+    else {
+      await User.create({ name, email, password });
+
+      res.status(201).json({ message: "successfully create user" })
+    }
   }
-  
+  catch (err) {
+    res.status(500).json(err);
+  };
+}
+
+
+exports.postLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    // const email=req.body.email;
+    // const password=req.body.password;
+    const result = await User.findOne({ where: { email: email } })
+    if (result) {
+      if (result.password === password) {
+        res.status(201).json({ message: 'Successfully login' });
+      }
+      else {
+        res.status(400).json({ message: 'Password Wrong' })
+      }
+    }
+    else {
+      res.status(404).json({ message: 'Email doesn"t exist' });
+    }
+  }
+  catch (err) {
+    res.status(500).json(err);
+  };
+}
