@@ -11,9 +11,11 @@ async function login(e) {
     // localStorage.setItem(obj.sell,JSON.stringify(obj));
     try {
         let response = await axios.post('http://localhost:3000/user/login', loginDetails)
-        if ( response.status === 201) {
+        if (response.status === 201) {
             alert(response.data.message);
-            window.location.href='../Expense/expense.html'
+            console.log(response.data);
+            localStorage.setItem('token', response.data.token);
+            window.location.href = '../Expense/expense.html'
         }
         else if (response.status === 400) {
             alert(response.data.message);

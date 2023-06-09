@@ -53,6 +53,9 @@ const productRoutes = require("./routes/product");
 const todosRoutes = require("./routes/todos");
 const userRoutes = require("./routes/user");
 const expenseRoutes = require("./routes/expense");
+const User = require('./models/user');
+const Expense = require('./models/expense');
+
 
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -61,8 +64,11 @@ app.use("/product", productRoutes);
 app.use("/todos", todosRoutes);
 
 app.use("/user", userRoutes);
-app.use("/expense",expenseRoutes);
+app.use("/expense", expenseRoutes);
 app.use(errorController.get404);
+
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 app.get('/products/:id', function (req, res, next) {
   res.json({ msg: 'This is CORS-enabled for all origins!' });

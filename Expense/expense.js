@@ -11,7 +11,8 @@ async function Expense(event) {
   }
   console.log(obj);
   try {
-    let response = await axios.post('http://localhost:3000/expense/add-expense', obj)
+    const token=localStorage.getItem('token')
+    let response = await axios.post('http://localhost:3000/expense/add-expense', obj,{headers:{'Authorization':token}})
 
     console.log(response);
     showExpenseOnScreen(response.data);
@@ -24,7 +25,8 @@ async function Expense(event) {
 }
 window.addEventListener('DOMContentLoaded', async () => {
   try {
-    let response = await axios.get('http://localhost:3000/expense/get-expense')
+    const token=localStorage.getItem('token')
+    let response = await axios.get('http://localhost:3000/expense/get-expense',{headers:{'Authorization':token}})
     console.log(response);
     response.data.expense.forEach(element => {
       showExpenseOnScreen(element);
@@ -50,7 +52,8 @@ async function showExpenseOnScreen(obj) {
   deleteBtn.onclick = async () => {
     console.log(obj.id);
     try {
-      let response = await axios.delete(`http://localhost:3000/expense/delete-expense/${obj.id}`)
+      const token=localStorage.getItem('token')
+      let response = await axios.delete(`http://localhost:3000/expense/delete-expense/${obj.id}`,{headers:{'Authorization':token}})
       console.log(response);
 
       parentElement.removeChild(childElement)
