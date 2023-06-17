@@ -11,7 +11,7 @@ async function SaveToCrudCrud(event) {
     console.log(obj);
     // localStorage.setItem(obj.sell,JSON.stringify(obj));
     try {
-        let response = await axios.post('http://localhost:3000/user/sign-up', obj)
+        let response = await axios.post('http://localhost:3000/user/sign-up', obj);
         if (response.status === 201) {
             window.location.href = "../Login/login.html"
         }

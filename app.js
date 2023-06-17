@@ -33,12 +33,12 @@
 //   console.log(err);
 // })
 
-
+require('dotenv').config();
 const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const errorController = require("./controllers/error");
+// const errorController = require("./controllers/error");
 const sequelize = require("./util/database");
 const cors = require("cors");
 
@@ -49,26 +49,33 @@ app.use(cors());
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-const productRoutes = require("./routes/product");
-const todosRoutes = require("./routes/todos");
+// const productRoutes = require("./routes/product");
+// const todosRoutes = require("./routes/todos");
 const userRoutes = require("./routes/user");
 const expenseRoutes = require("./routes/expense");
+const purchaseRoutes=require("./routes/purchase");
 const User = require('./models/user');
 const Expense = require('./models/expense');
+const Order=require('./models/order');
 
 
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/product", productRoutes);
-app.use("/todos", todosRoutes);
+// app.use("/product", productRoutes);
+// app.use("/todos", todosRoutes);
+
 
 app.use("/user", userRoutes);
 app.use("/expense", expenseRoutes);
-app.use(errorController.get404);
+app.use("/purchase",purchaseRoutes);
+// app.use(errorController.get404);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
+
+User.hasMany(Order);
+Order.belongsTo(User);
 
 app.get('/products/:id', function (req, res, next) {
   res.json({ msg: 'This is CORS-enabled for all origins!' });
@@ -85,4 +92,3 @@ sequelize
     });
   })
   .catch((err) => console.log(err));
-

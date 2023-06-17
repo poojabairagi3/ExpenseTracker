@@ -10,7 +10,7 @@ exports.postExpense = async (req, res, next) => {
             category: category,
             userId: req.user.id,
         })
-        console.log(data);
+        // console.log(data);
         return res.status(201).json({ details: data });
 
     }
@@ -23,13 +23,13 @@ exports.postExpense = async (req, res, next) => {
 
 exports.getExpense = async (req, res, next) => {
     try {
-        // console.log(user.id)
+       
         // const expense = await Expense.findAll({where:{userId:req.user.id}});
-        // const expense=await req.user.getExpenses();
-        const expense = await Expense.findAll({
-            where: { userId: req.user.id }
-        })
-        console.log(expense)
+        const expense=await req.user.getExpenses();
+        // const expense = await Expense.findAll({
+        //     where: { userId: req.user.id }
+        // })
+        // console.log(expense)
         res.status(201).json({ expense: expense });
     }
     catch (err) {
