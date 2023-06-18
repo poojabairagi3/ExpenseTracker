@@ -123,7 +123,7 @@ async function checkPremiumUser() {
           const leaderBoard = document.getElementById('leader');
           leaderBoard.innerHTML += '<h1> Leader Board</h1>'
           responseLeader.data.forEach((userDetails) => {
-            leaderBoard.innerHTML += `<li>Name - ${userDetails.name} Total Expenses - ${userDetails.total_cost}`
+            leaderBoard.innerHTML += `<li>Name - ${userDetails.name} , Total Expenses - ${userDetails.total_cost}</li>`
           })
         }
         catch (err) {
