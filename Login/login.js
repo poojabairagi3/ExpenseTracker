@@ -10,7 +10,7 @@ async function login(e) {
     console.log(loginDetails);
     // localStorage.setItem(obj.sell,JSON.stringify(obj));
     try {
-        
+
         let response = await axios.post('http://localhost:3000/user/login', loginDetails)
         if (response.status === 201) {
             alert(response.data.message);

@@ -53,10 +53,12 @@ app.set("views", "views");
 // const todosRoutes = require("./routes/todos");
 const userRoutes = require("./routes/user");
 const expenseRoutes = require("./routes/expense");
-const purchaseRoutes=require("./routes/purchase");
+const purchaseRoutes = require("./routes/purchase");
+const premiumRoutes = require("./routes/premium");
 const User = require('./models/user');
 const Expense = require('./models/expense');
-const Order=require('./models/order');
+const Order = require('./models/order');
+
 
 
 app.use(bodyParser.json({ extended: false }));
@@ -68,7 +70,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/user", userRoutes);
 app.use("/expense", expenseRoutes);
-app.use("/purchase",purchaseRoutes);
+app.use("/purchase", purchaseRoutes);
+app.use("/premium", premiumRoutes);
 // app.use(errorController.get404);
 
 User.hasMany(Expense);

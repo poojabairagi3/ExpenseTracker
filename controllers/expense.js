@@ -23,9 +23,9 @@ exports.postExpense = async (req, res, next) => {
 
 exports.getExpense = async (req, res, next) => {
     try {
-       
+
         // const expense = await Expense.findAll({where:{userId:req.user.id}});
-        const expense=await req.user.getExpenses();
+        const expense = await req.user.getExpenses();
         // const expense = await Expense.findAll({
         //     where: { userId: req.user.id }
         // })
