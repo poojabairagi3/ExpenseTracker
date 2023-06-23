@@ -31,6 +31,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // console.log(response);
     response.data.expense.forEach(element => {
       showExpenseOnScreen(element);
+      
     });
     checkPremiumUser();
   }
@@ -123,7 +124,7 @@ async function checkPremiumUser() {
           const leaderBoard = document.getElementById('leader');
           leaderBoard.innerHTML += '<h1> Leader Board</h1>'
           responseLeader.data.forEach((userDetails) => {
-            leaderBoard.innerHTML += `<li>Name - ${userDetails.name} , Total Expenses - ${userDetails.total_cost}</li>`
+            leaderBoard.innerHTML += `<li>Name - ${userDetails.name} , Total Expenses - ${userDetails.totalExpenses}</li>`
           })
         }
         catch (err) {
@@ -138,5 +139,4 @@ async function checkPremiumUser() {
   }
 
 }
-
 

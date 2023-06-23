@@ -87,6 +87,7 @@ app.get('/products/:id', function (req, res, next) {
 const PORT = 3000;
 
 sequelize
+  // .sync({force:true})
   .sync()
   .then((result) => {
     // console.log(result);
