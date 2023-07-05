@@ -55,11 +55,10 @@ const userRoutes = require("./routes/user");
 const expenseRoutes = require("./routes/expense");
 const purchaseRoutes = require("./routes/purchase");
 const premiumRoutes = require("./routes/premium");
+const forgotpasswordRoutes=require("./routes/password");
 const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
-
-
 
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -72,7 +71,8 @@ app.use("/user", userRoutes);
 app.use("/expense", expenseRoutes);
 app.use("/purchase", purchaseRoutes);
 app.use("/premium", premiumRoutes);
-// app.use(errorController.get404);
+app.use("/password",forgotpasswordRoutes);
+// app.use(errorCoyntroller.get404);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -91,7 +91,7 @@ sequelize
   .sync()
   .then((result) => {
     // console.log(result);
-    app.listen(PORT, function () {
+    app.listen(PORT, function () { 
       console.log(`CORS-enabled web server listening on port ${PORT}`)
     });
   })

@@ -1,6 +1,6 @@
 const User = require('../models/user');
-const Expense = require('../models/expense');
-const sequelize = require('../util/database');
+// const Expense = require('../models/expense');
+// const sequelize = require('../util/database');
 
 exports.getPremium = async (req, res) => {
     try {
