@@ -59,6 +59,7 @@ const forgotpasswordRoutes=require("./routes/password");
 const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const Forgotpassword=require('./models/password');
 
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -79,6 +80,9 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(Forgotpassword);
+Forgotpassword.belongsTo(User);
 
 app.get('/products/:id', function (req, res, next) {
   res.json({ msg: 'This is CORS-enabled for all origins!' });
