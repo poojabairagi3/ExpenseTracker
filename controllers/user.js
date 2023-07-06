@@ -71,3 +71,10 @@ exports.postLogin = async (req, res, next) => {
     res.status(500).json(err);
   };
 }
+
+exports.getdownloadfile=async(req,res)=>{
+  try{}
+  catch(err){
+    console.log(err);
+  }
+}

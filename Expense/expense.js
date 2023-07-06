@@ -1,3 +1,4 @@
+const token = localStorage.getItem('token');
 
 async function Expense(event) {
   event.preventDefault();
@@ -140,3 +141,22 @@ async function checkPremiumUser() {
 
 }
 
+async function download(){
+  try{
+ const response= await axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+  
+      if(response.status === 201){
+          //the bcakend is essentially sending a download link
+          //  which if we open in browser, the file would download
+          var a = document.createElement("a");
+          a.href = response.data.fileUrl;
+          a.download = 'myexpense.csv';
+          a.click();
+      } else {
+          throw new Error(response.data.message)
+      }
+
+  }
+  catch(err){
+    console.log(err)
+  }}
