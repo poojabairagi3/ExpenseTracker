@@ -1,7 +1,50 @@
 const sequelize = require('../util/database');
 const Expense = require('../models/expense');
 const User = require('../models/user');
+// const AWS=require('aws-sdk');
+const S3Service=require('../services/S3services');
+const UserServices=require('../services/userservices');
+const FileUploaded=require('../models/fileuploaded');
 
+exports.getallfiles=async(req,res)=>{
+    try{
+        // const expense = await Expense.findAll({where:{userId:req.user.id}});
+        // const expense = await req.user.getExpenses();
+        const urls = await FileUploaded.findAll({
+            where: { userId: req.user.id }
+        })
+        console.log(urls)
+        res.status(201).json({ urls: urls});
+
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+
+
+exports.getdownloadfile=async(req,res)=>{
+    try{
+     
+    const expenses=await UserServices.getExpenses(req);
+        const stringifiedExpenses=JSON.stringify(expenses);
+//it should dependid upon the userId
+
+        const userId=req.user.id;
+        const filename=`myexpense${userId}/${new Date}.txt`;
+        const fileURl=await S3Service.uploadToS3(stringifiedExpenses,filename);
+        console.log(fileURl);
+        await FileUploaded.create({URL:fileURl,userId});
+        res.status(200).json({fileURl,success:true});
+        
+      
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+ 
 
 exports.postExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
@@ -25,7 +68,6 @@ exports.postExpense = async (req, res, next) => {
 
 exports.getExpense = async (req, res, next) => {
     try {
-
         // const expense = await Expense.findAll({where:{userId:req.user.id}});
         const expense = await req.user.getExpenses();
         // const expense = await Expense.findAll({

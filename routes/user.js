@@ -12,7 +12,7 @@ router.post('/login', userController.postLogin);
 
 router.get('/check-premium', auth.authenticate, userController.checkPremium);
 
-router.get('/download',userController.getdownloadfile);
+
 
 module.exports = router;
 

@@ -72,9 +72,3 @@ exports.postLogin = async (req, res, next) => {
   };
 }
 
-exports.getdownloadfile=async(req,res)=>{
-  try{}
-  catch(err){
-    console.log(err);
-  }
-}
