@@ -23,13 +23,13 @@
         <div class="row mb-3">
           <label for="inputPassword3" class="col-sm-2 col-form-label">Choose Expense Amount :</label>
           <div class="col-sm-3">
-            <input type="number" class="form-control" name="amount">
+            <input type="number" class="form-control" name="amount" id="expense">
           </div>
         </div>
         <div class="row mb-3">
           <label for="inputPassword3" class="col-sm-2 col-form-label">Description :</label>
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="description">
+            <input type="text" class="form-control" name="description" id="desc">
           </div>
         </div>
 
@@ -55,12 +55,34 @@
   <button  style="visibility: hidden;" onclick="download()" id="downloadexpense" type="button" >Download File</button></div>
   <button style="visibility: hidden;" onclick="filedownload()" type="button" id="downloadurls" class="btn btn-info float-right">Previous Download Files</button>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+ 
+    <form>
+      <label for="expenseshow">
+        Select How many expenses you want to see:</label>
+      <select name="expenseshow" id="expenseshow">
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="9">9</option>
+        <option value="12">12</option>
+      </select>
+      <input  type="submit" value="Submit" id="itemButton" />
+    </form>
   <ul id="listofExpenses">
     <h1>Expenses</h1>
   </ul>
+
+  <ul id="pagination" class="pagination">
+    <!-- Pagination links will be added dynamically here -->
+  </ul>
+  
   <div id="leader"></div>
   <div id="Url"></div>
 
+  
+
+  
+  
   
   <!-- <script src="script2.js"></script>-->
   <script src="expense.js"></script>

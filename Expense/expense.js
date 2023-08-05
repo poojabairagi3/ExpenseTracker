@@ -1,5 +1,9 @@
+// const FileUploaded = require("../models/fileuploaded");
+
 const token = localStorage.getItem('token');
 
+
+ 
 async function Expense(event) {
   event.preventDefault();
   const amount = event.target.amount.value;
@@ -25,28 +29,31 @@ async function Expense(event) {
     console.log(err);
   }
 }
-window.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const token = localStorage.getItem('token')
-    let response = await axios.get('http://localhost:3000/expense/get-expense', { headers: { 'Authorization': token } })
-    // console.log(response);
-    response.data.expense.forEach(element => {
-      showExpenseOnScreen(element);
+// window.addEventListener('DOMContentLoaded', async () => {
+//   try {
+//     const token = localStorage.getItem('token')
+//     let response = await axios.get('http://localhost:3000/expense/get-expense', { headers: { 'Authorization': token } })
+//     // console.log(response);
+//     response.data.expense.forEach(element => {
+//       showExpenseOnScreen(element);
       
-    });
-    checkPremiumUser();
-  }
-  catch (err) {
-    console.log(err);
-  }
-})
+//     });
+//     checkPremiumUser();
+//   }
+//   catch (err) {
+//     console.log(err);
+//   }
+// })
+
+
+   
+
 
 async function showExpenseOnScreen(obj) {
   const parentElement = document.getElementById('listofExpenses');
   const childElement = document.createElement('li');
   childElement.textContent = obj.amount + ' - ' + obj.description + ' - ' + obj.category + ' ';
   parentElement.appendChild(childElement);
-
 
   const deleteBtn = document.createElement('input');
   deleteBtn.type = 'button';
@@ -59,9 +66,7 @@ async function showExpenseOnScreen(obj) {
       const token = localStorage.getItem('token')
       let response = await axios.delete(`http://localhost:3000/expense/delete-expense/${obj.id}`, { headers: { 'Authorization': token } })
       console.log(response);
-
       parentElement.removeChild(childElement)
-
     }
     catch (err) {
       console.log(err);
@@ -146,7 +151,7 @@ async function checkPremiumUser() {
 
 async function download(){
   try{
-   console.log(ispremiummember);
+   
  const response= await axios.get('http://localhost:3000/expense/download', { headers: {"Authorization" : token} })
   console.log(response);
   console.log(response.data);
@@ -171,8 +176,7 @@ async function download(){
   
 
     async function filedownload(){
-      try{
-        
+      try{   
      const response= await axios.get('http://localhost:3000/expense/download-file', { headers: {"Authorization" : token} })
       console.log(response);
       console.log(response.data);  
@@ -181,24 +185,117 @@ async function download(){
        response.data.urls.forEach((urlDetails) => {
               eleurl.innerHTML += `<li> ${urlDetails.URL} </li>`
           })
-      
-          
         }
       catch(err){
         console.log(err)
       }
     }
+    
+ async function getProducts(page){
+  try{ 
+    const response=await axios.get(
+      `http://localhost:3000/expense/get-expenses?page=${page}`,
+      {
+        headers:{Authorization:token},
+       
+      }
+      
+    );
+    console.log(response);
+    
+    response.data.expenses.forEach(element => {
+      showExpenseOnScreen(element);
+      
+    });
+      showPagination(response.data);
+  }
+  catch(err){
+    console.log(err);
+  }
+ }
 
 
-      // async function showurlsonscreen(){
-      //   try{
-      //     const parentElement = document.getElementById('Url');
-      //     const childElement = document.createElement('li');
-      //     childElement.textContent = response ;
-      //     console.log(urls);
-      //     parentElement.appendChild(childElement);
-      //   }
-      //   catch(err){
-      //     console.log(err);
-      //   }
-      // }
+    // async function getUsers(){
+    //   try{
+    //     const res=await axios.get("http://localhost:3000/get-user",{
+    //       headers:{Authorization:token},
+    //     });
+    //     if(res.data.isPremium){
+    //       buyPremium.style.display="none";
+    //       expenseBoard.hidden=false;
+    //       downloadExpense.hidden=false;
+    //       premiumUser.hidden=false;
+    //       showboard.hidden=false;
+    //       FileUploaded.hidden=false;
+
+    //     }
+    //   }
+    //   catch(err){
+    //     console.log(err);
+    //   }
+    // }
+
+ 
+window.addEventListener("DOMContentLoaded",async()=>{
+ try{
+  const objUrlParams=new URLSearchParams(window.location.search);
+  console.log(objUrlParams);
+  const page=objUrlParams.get('page')||1
+  const response=await axios.get(
+    `http://localhost:3000/expense/get-expenses?page=${page}`,
+    {
+      headers:{Authorization:token}
+    }
+  );
+  console.log(response);
+  
+  response.data.expenses.forEach(element => {
+          showExpenseOnScreen(element);
+          
+        });
+  
+  showPagination(response.data);
+}
+catch(err){
+  console.log(err);
+}
+})
+
+async function showPagination({
+  currentPage,
+  hasNextPage,
+  nextPage,
+  hasPreviousPage,
+  previousPage,
+  lastPage,
+}) {
+  pagination.innerHTML = "";
+  if (hasPreviousPage) {
+    const btn2 = document.createElement("button");
+    btn2.innerHTML = previousPage;
+    btn2.className="btn btn-success"
+    btn2.type='button';
+    btn2.addEventListener("click", () => getProducts(previousPage));
+    pagination.appendChild(btn2);
+  }
+  const btn1 = document.createElement("button");
+  btn1.innerHTML = `<h3>${currentPage}</h3>`;
+  btn1.className="btn btn-success";
+  btn1.type='button';
+  btn1.addEventListener("click", () => getProducts(currentPage));
+  pagination.appendChild(btn1);
+
+  if (hasNextPage) {
+    const btn3 = document.createElement("button");
+    btn3.innerHTML = nextPage;
+    btn3.className="btn btn-success";
+    btn3.type='button';
+    btn3.addEventListener("click", () => getProducts(nextPage));
+    pagination.appendChild(btn3);
+  }
+
+  
+}
+
+
+
