@@ -83,7 +83,7 @@ exports.postExpense = async (req, res, next) => {
 
 exports.getExpenses = async (req, res, next) => {
     try {
-      let ITEMS_PER_PAGE = 3;
+      let ITEMS_PER_PAGE =Number(req.query.ITEMS_PER_PAGE);
       let page = Number(req.query.page) || 1;
       let totalItems;
   

@@ -1,7 +1,15 @@
 // const FileUploaded = require("../models/fileuploaded");
 
 const token = localStorage.getItem('token');
+let currentPage = 1;
+const resultsPerPage = 2;
 
+const item = document.getElementById("itemButton");
+item.addEventListener("click", () => {
+  const itemNo = document.getElementById("expenseshow").value;
+  const itemNumeric = Number(itemNo);
+  localStorage.setItem("itemNo", itemNumeric);
+});
 
  
 async function Expense(event) {
@@ -45,9 +53,14 @@ async function Expense(event) {
 //   }
 // })
 
-
-   
-
+const displayedExpenses=[];
+   function removeFromScreen() {
+    const parentElement = document.getElementById("listofExpenses");
+    displayedExpenses.forEach((childElement) => {
+      parentElement.removeChild(childElement);
+    });
+    displayedExpenses.length = 0;
+  }
 
 async function showExpenseOnScreen(obj) {
   const parentElement = document.getElementById('listofExpenses');
@@ -75,6 +88,7 @@ async function showExpenseOnScreen(obj) {
 
   childElement.appendChild(deleteBtn);
   parentElement.appendChild(childElement);
+  displayedExpenses.push(childElement);
 }
 
 document.getElementById('rzp-button1').onclick = async function (e) {
@@ -193,16 +207,17 @@ async function download(){
     
  async function getProducts(page){
   try{ 
+    const finalItemNo = localStorage.getItem("itemNo");
     const response=await axios.get(
       `http://localhost:3000/expense/get-expenses?page=${page}`,
       {
         headers:{Authorization:token},
-       
+        params: { ITEMS_PER_PAGE: finalItemNo },
       }
       
     );
     console.log(response);
-    
+    removeFromScreen();
     response.data.expenses.forEach(element => {
       showExpenseOnScreen(element);
       
@@ -236,30 +251,33 @@ async function download(){
     // }
 
  
-window.addEventListener("DOMContentLoaded",async()=>{
- try{
-  const objUrlParams=new URLSearchParams(window.location.search);
-  console.log(objUrlParams);
-  const page=objUrlParams.get('page')||1
-  const response=await axios.get(
-    `http://localhost:3000/expense/get-expenses?page=${page}`,
-    {
-      headers:{Authorization:token}
-    }
-  );
-  console.log(response);
+// window.addEventListener("DOMContentLoaded",async()=>{
+//  try{
+//   const objUrlParams=new URLSearchParams(window.location.search);
+//   console.log(objUrlParams);
+//   const page=objUrlParams.get('page')||1
+//   const response=await axios.get(
+//     `http://localhost:3000/expense/get-expenses?page=${page}`,
+//     {
+//       headers:{Authorization:token}
+//     }
+//   );
+//   console.log(response);
   
-  response.data.expenses.forEach(element => {
-          showExpenseOnScreen(element);
+//   response.data.expenses.forEach(element => {
+//           showExpenseOnScreen(element);
           
-        });
+//         });
   
-  showPagination(response.data);
-}
-catch(err){
-  console.log(err);
-}
-})
+//   showPagination(response.data);
+// }
+// catch(err){
+//   console.log(err);
+// }
+// })
+
+
+
 
 async function showPagination({
   currentPage,
@@ -298,4 +316,10 @@ async function showPagination({
 }
 
 
-
+window.addEventListener("DOMContentLoaded", async (e) => {
+  e.preventDefault();
+  const page = 1;
+  getProducts(page);
+  // fetchAndRenderData();
+  // getUsers();
+});
