@@ -35,12 +35,16 @@
 
 require('dotenv').config();
 const path = require("path");
+const fs=require('fs');
 
 const express = require("express");
 const bodyParser = require("body-parser");
 // const errorController = require("./controllers/error");
 const sequelize = require("./util/database");
 const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan=require("morgan");
 
 const app = express();
 
@@ -67,7 +71,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // app.use("/product", productRoutes);
 // app.use("/todos", todosRoutes);
-
+const accessLogStream=fs.createWriteStream(
+  path.join(__dirname,'access.log'),
+  {flags:'a'}
+  );
 
 app.use("/user", userRoutes);
 app.use("/expense", expenseRoutes);
@@ -75,6 +82,10 @@ app.use("/purchase", purchaseRoutes);
 app.use("/premium", premiumRoutes);
 app.use("/password",forgotpasswordRoutes);
 // app.use(errorCoyntroller.get404);
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined',{stream:accessLogStream}));
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
