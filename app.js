@@ -39,7 +39,7 @@ const fs=require('fs');
 
 const express = require("express");
 const bodyParser = require("body-parser");
-// const errorController = require("./controllers/error");
+
 const sequelize = require("./util/database");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -69,8 +69,7 @@ const FileUploaded = require('./models/fileuploaded');
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use("/product", productRoutes);
-// app.use("/todos", todosRoutes);
+
 const accessLogStream=fs.createWriteStream(
   path.join(__dirname,'access.log'),
   {flags:'a'}
@@ -104,7 +103,7 @@ app.get('/products/:id', function (req, res, next) {
   res.json({ msg: 'This is CORS-enabled for all origins!' });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 sequelize
   // .sync({force:true})
