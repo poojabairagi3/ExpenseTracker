@@ -1,5 +1,3 @@
-
-exports.getExpenses=(req,res)=>{
-    return req.user.getExpenses();
-}
-
+exports.getExpenses = (req, res) => {
+  return req.user.getExpenses();
+};

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense - Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <style>
+    
+    body{
+      /* background-image: url('https://img.freepik.com/premium-photo/clipboard-with-pen-blue-background-top-view_93675-84294.jpg?ga=GA1.1.1269265412.1728488402&semt=ais_hybrid'); */
+    /* background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAJtR_dtOuFSM0HJT5E7pYmONLEJd-hhxY5A&s'); */
+      background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 50px;
+    background-color: #6ecdf3;
+  }
+  
+    .card {
+      
+      background: url('https://media.istockphoto.com/id/1205116274/photo/login-web-form.jpg?s=612x612&w=is&k=20&c=sZNosb4jBrLMjD7b4e4r7PuLhD0Fnh5bL75UYKYrFR8=') no-repeat fixed;
+      border: 2px solid black;
+      background-size: cover;
+      opacity: 0.9;
+      
+    }
+
+    .card-body {
+      margin: 30px;
+      background-color: #ffffff;
+      border: 1px solid black;
+      opacity: 0.9;
+       background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      margin: 30px;
+      background-color: #ffffff;
+      border: 1px solid black;
+      opacity: 0.9;
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmmgBjkp5Py8VY5XAcnEqkJdfpkz6UF66fTg&usqp=CAU');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+
+    
+    .card-header {
+      text-decoration: solid;
+      color: rgb(231, 219, 219);
+    }
+
+ /* Add a sheer overlay for subtlety */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(241, 234, 241, 0.5); /* Adjust opacity for effect */
+    z-index: -1; /* Ensure the overlay stays behind content */
+  }
+  .btn-primary {
+      background-color: rgb(8, 150, 39);
+      border-color: rgb(13, 14, 11);
+    }
+
+    .btn-primary:hover {
+      background-color: #a51010;
+      border-color: #030303;
+    }
+a:hover{
+      color: #ffffff;
+      background-color: #2dc70e;
+      border-color: #030303;
+      padding: 5px;
+      margin: 5px;
+    }
+    .card {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    
+    /* a {
+      display: block;
+      text-align: center;
+      /* margin-top: 15px; */
+      /* color: #0e0ae4;
+      text-decoration: double; */
+       /* */ 
+    /* } */
+  </style>
+</head>
+
+<body>
+  <form onsubmit="login(event)">
+    <div class="card">
+      <div style="text-align: center;">
+        <h3 class="card-header">Expense Tracker App</h3>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Enter Your Email:</label>
+          <div class="col-sm-3">
+            <input type="email" name="email" required placeholder="Enter your email" aria-label="Email Address" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Enter Your Password:</label>
+          <div class="col-sm-3">
+            <input type="password" name="password" required placeholder="Enter your password" 
+              aria-label="Password" autocomplete="current-password" />
+          </div>
+        </div>
+
+        <div style="text-align: center;">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+    </div>
+  </form>
+<div class="text-center mt-3"></div>
+  <a href="user.html">New User? Sign up now</a><br>
+<a href="forgotpassword.html">forgot?password</a>
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="login.js"></script>
+</body>
+
+</html>

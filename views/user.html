@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <style>
+    body {
+  background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.deviantart.com%2Fargonbyte%2Fart%2FFluttershy-Login-Background-Series-1-352122954&psig=AOvVaw3AttpN3JVgQXYHIrmQUo4V&ust=1735050213965000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLC946CMvooDFQAAAAAdAAAAABAK');
+  background-size: cover;
+  background-color: #2dc70e;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white overlay */
+}
+
+    .card {
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIgn4foEF5_VnHGR1uGHNT3eNNDruoUUR9HQ&usqp=CAU') repeat;
+      border: 2px solid black;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      opacity: 0.9;
+    }
+
+    .card-body {
+      margin: 30px;
+      background-color: #ffffff;
+      border: 1px solid black;
+      opacity: 0.9;
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmmgBjkp5Py8VY5XAcnEqkJdfpkz6UF66fTg&usqp=CAU');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+
+    .card-header {
+      text-decoration: solid;
+      color: rgb(231, 219, 219);
+    }
+    .btn-primary {
+      /* background-color: rgb(8, 150, 39); */
+      border-color: rgb(13, 14, 11);
+    }
+
+    .btn-primary:hover {
+      background-color: #a51010;
+      border-color: #030303;
+    }
+    /* a { */
+      /* display: block;
+      text-align: center; */
+      /* margin-top: 15px; */
+      /* color: #0e0ae4;
+      text-decoration: double; */
+      
+    /* } */
+    a:hover{
+      color: #ffffff;
+      background-color: #2dc70e;
+      border-color: #030303;
+    }
+
+    body {
+      background-color: azure;
+    }
+    h3{color: #ffffff;}
+  </style>
+</head>
+
+<body>
+
+  <div class="container my-5">
+    <form onsubmit="signup(event)">
+      <div class="card">
+        <div style="text-align: center;">
+          <h3 class="card-header">Expense Tracker App</h3>
+        </div>
+        <div class="card-body">
+          <!-- Name Field -->
+          <div class="mb-3 row">
+            <label for="name" class="col-sm-2 col-form-label">Enter Your Name:</label>
+            <div class="col-sm-3">
+              <input type="text" id="name" name="name" class="form-control" placeholder="Enter full name" required />
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="mb-3 row">
+            <label for="email" class="col-sm-2 col-form-label">Enter Your Email:</label>
+            <div class="col-sm-3">
+              <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required />
+            </div>
+          </div>
+
+         
+
+          <!-- Password Field -->
+          <div class="mb-3 row">
+            <label for="password" class="col-sm-2 col-form-label">Enter Your Password:</label>
+            <div class="col-sm-3">
+              <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required />
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Signup</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="login.html">Existing User? Login Here</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="user.js"></script>
+</body>
+
+</html>

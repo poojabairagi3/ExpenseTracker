@@ -1,34 +1,38 @@
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 
-exports.uploadToS3  = async(data,filename)=>{
-    const BUCKET_NAME = process.env.BUCKET_NAME;
-    const IAM_USER_KEY = process.env.IAM_USER_KEY;
-    const IAM_SECRET_KEY = process.env.IAM_SECRET_KEY;
+exports.uploadToS3 = async (data, filename) => {
+  const BUCKET_NAME = process.env.BUCKET_NAME;
+  const IAM_USER_KEY = process.env.IAM_USER_KEY;
+  const IAM_SECRET_KEY = process.env.IAM_SECRET_KEY;
 
-    // console.log(typeof BUCKET_NAME)
-    
-    let s3Bucket = new AWS.S3({
-        accessKeyId : IAM_USER_KEY,
-        secretAccessKey : IAM_SECRET_KEY
-        // Bucket : BUCKET_NAME
-    })
-    var params = {
-        Bucket : BUCKET_NAME , 
-        Key : filename,
-        Body : data,
-        ACL : 'public-read'
-            }
-    console.log(params)
-    return new Promise((resolve,reject)=>{
-        s3Bucket.upload(params,(err,data)=>{//async
-            if(err){
-                console.log('Something went wrong',err);
-                reject(err);
-            }
-            else{
-                console.log('success',data);
-                resolve(data.Location);
-            }
-        })
-    })  
-}
+  // Ensure environment variables are set
+  if (!BUCKET_NAME || !IAM_USER_KEY || !IAM_SECRET_KEY) {
+    throw new Error("Missing AWS credentials or bucket name");
+  }
+
+  // Configure the AWS S3 client
+  AWS.config.update({
+    accessKeyId: IAM_USER_KEY,
+    secretAccessKey: IAM_SECRET_KEY,
+  });
+
+  const s3 = new AWS.S3();
+
+  // Define the S3 upload parameters
+  const params = {
+    Bucket: BUCKET_NAME,
+    Key: filename,
+    Body: data,
+    ACL: "public-read", // You can adjust the ACL as needed
+  };
+
+  try {
+    // Upload the file to S3
+    const uploadData = await s3.upload(params).promise();
+    console.log("Upload successful", uploadData);
+    return uploadData.Location; // Return the file URL
+  } catch (err) {
+    console.error("Error uploading to S3", err);
+    throw new Error("S3 upload failed: " + err.message);
+  }
+};

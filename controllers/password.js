@@ -9,126 +9,146 @@ const forgotpassword = async (req, res, next) => {
   try {
     const { email } = req.body;
 
-    const user = await User.findOne({
-      where: { email: email },
-    });
-    // console.log(user);
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ where: { email } });
     if (user) {
       const id = uuid.v4();
+      const expireby = new Date(Date.now() + 60 * 60 * 1000); // Set expiration to 1 hour from now
+
+      // Create forgot password entry
       await Forgotpassword.create({
         id,
         active: true,
-        userId:user.id
+        userId: user.id,
+        expiresby: expireby, // Fixed field name to match model
       });
 
-      //sending mail
+      // Sending email
       const client = Sib.ApiClient.instance;
       const apiKey = client.authentications["api-key"];
       apiKey.apiKey = process.env.API_KEY;
+
       const transactionalEmailApi = new Sib.TransactionalEmailsApi();
 
       const sender = {
-        email: "poojabairagi0301@gmail.com",
-        name: "Pooja Bairagi",
+        email: process.env.MAIN_EMAIL, // Change sender email as needed
+        name: process.env.USER,
       };
 
-      const receivers = [
-        {
-          email: req.body.email,
-        },
-      ];
+      const receivers = [{ email }];
 
-      await transactionalEmailApi
-        .sendTransacEmail({
+      try {
+        await transactionalEmailApi.sendTransacEmail({
           sender,
-          to: receivers ,
-          subject: "Reset Password to Expense Tracker",
-          htmlContent: `<a href="http://localhost:3000/password/resetpassword/${id}">Click Here</a> for resetting password`,
-        })
-        .then(console.log)
-        .catch((err) => {
-          console.log(err);
-          throw new Error(err);
+          to: receivers,
+          subject: "Reset Password for Expense Tracker",
+          htmlContent: `<a href="http://localhost:3000/password/resetpassword/${id}">Click Here</a> to reset your password.`,
         });
-      res.status(200).json({ message: "Email sent successfully" });
+
+        return res.status(200).json({ message: "Email sent successfully" });
+      } catch (emailErr) {
+        console.error("Email send error: ", emailErr);
+        return res.status(500).json({ message: "Error sending email", error: emailErr.message });
+      }
     } else {
-      res.status(404).json({ message: "USER NOT FOUND" });
+      return res.status(404).json({ message: "User not found" });
     }
-  }
-   catch (err) {
-    // console.log(err);
-    res.status(500).json({ message: "something went wrong" });
+  } catch (err) {
+    console.error("Error in forgotpassword:", err);
+    res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
 
 const resetpassword = async (req, res, next) => {
-  const id = req.params.id;
-  const forgotpasswordrequest = await Forgotpassword.findOne({
-    where: { id },
-  });
+  try {
+    const { id } = req.params;
+    const forgotPasswordRequest = await Forgotpassword.findOne({
+      where: { id },
+    });
 
-  if (forgotpasswordrequest) {
-   
-    res.status(200).send(`<html>
-                            <script>
-                              function formsubmitted(e){
-                              e.preventDefault();
-                              console.log('called')
-                              }
-                            </script>
-                            <form action='http://localhost:3000/password/updatepassword/${id}' method="get">
-                            <label for="newpassword">Enter New password</label>
-                            <input name="newpassword" type="password" required></input>
-                            <button>reset password</button>
-                            </form>
-                          </html>`);
-    res.end();
-  } else {
-    res.status(404).send(`<html>
-                            <h1>Page Has expired</h1>
-                          </html>`);
-    res.end();
+    if (forgotPasswordRequest) {
+      const currentTime = new Date();
+      if (forgotPasswordRequest.expiresby < currentTime) {
+        return res.status(400).send(`
+          <html>
+            <h1>Reset link has expired</h1>
+          </html>
+        `);
+      }
+
+      return res.status(200).send(`
+        <html>
+          <form action="http://localhost:3000/password/updatepassword/${id}" method="POST">
+            <label for="newpassword">Enter New Password</label>
+            <input name="newpassword" type="password" required></input>
+            <button type="submit">Reset Password</button>
+          </form>
+        </html>
+      `);
+    } else {
+      return res.status(404).send(`
+        <html>
+          <h1>Invalid or expired reset link</h1>
+        </html>
+      `);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
 
 const updatepassword = async (req, res, next) => {
   try {
-    const { newpassword } = req.query;
-    const resetPasswordId = req.params.resetpasswordid;
+    const { newpassword } = req.body; // Use req.body for POST requests
+    const { resetpasswordid } = req.params;
+
     const resetPasswordRequest = await Forgotpassword.findOne({
-      where: { id: resetPasswordId },
+      where: { id: resetpasswordid },
     });
+
     if (resetPasswordRequest) {
       const user = await User.findOne({
         where: { id: resetPasswordRequest.userId },
       });
+
       if (user) {
         const saltRounds = 10;
-        bcrypt.genSalt(saltRounds, function (err, salt) {
+
+        bcrypt.genSalt(saltRounds, (err, salt) => {
           if (err) {
-            console.log(err);
-            throw new Error(err);
+            console.error("Error generating salt: ", err);
+            throw err;
           }
+
           bcrypt.hash(newpassword, salt, async (err, hash) => {
             if (err) {
-              console.log(err);
-              throw new Error(err);
+              console.error("Error hashing password: ", err);
+              throw err;
             }
+
+            // Update user password and mark reset request as inactive
             await user.update({ password: hash });
             await resetPasswordRequest.update({ active: false });
 
-            res.status(200).json({ message: "Password Reset Successfully " });
+            return res
+              .status(200)
+              .json({ message: "Password reset successfully" });
           });
         });
       } else {
-        return res.status(404).json({ message: "No user Exists" });
+        return res.status(404).json({ message: "User not found" });
       }
+    } else {
+      return res.status(404).json({ message: "Invalid or expired reset link" });
     }
   } catch (err) {
-    console.log(err);
-    res.status(403).json({ err, message: "Something went wrong" });
+    console.error("Error updating password:", err);
+    res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
-
 
 module.exports = { forgotpassword, resetpassword, updatepassword };
